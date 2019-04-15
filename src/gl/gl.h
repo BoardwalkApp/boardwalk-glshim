@@ -38,7 +38,7 @@ extern void *gles;
 #ifdef USE_ES2
 #define GLES_LIB "libGLESv2.so"
 #else
-#if defined(BCMHOST)
+#if defined(BCMHOST) || defined(__ANDROID__) || defined(BOARDWALK_POTATO)
 #define GLES_LIB "libGLESv1_CM.so"
 #else
 #define GLES_LIB "libGLES_CM.so"
@@ -59,7 +59,7 @@ extern void *gles;
         gles_##name = (name##_PTR)dlsym(gles, #name);               \
         WARN_NULL(gles_##name);                                     \
     }
-
+#ifndef BOARDWALK_POTATO
 #define LOAD_GLES_OES(name)                                         \
     static name##_PTR gles_##name;                                  \
     if (gles_##name == NULL) {                                      \
@@ -70,7 +70,18 @@ extern void *gles;
 	    gles_##name = (name##_PTR)eglGetProcAddress(#name"OES");          \
 	    WARN_NULL(gles_##name);                                     \
     }
-	
+#else
+#define LOAD_GLES_OES(name)                                         \
+    static name##_PTR gles_##name;                                  \
+    if (gles_##name == NULL) {                                      \
+	    if (gles == NULL) {                                         \
+	        gles = dlopen(GLES_LIB, RTLD_LOCAL | RTLD_LAZY);        \
+	        WARN_NULL(gles);                                        \
+	    }                                                           \
+	    gles_##name = (name##_PTR)dlsym(gles, #name"OES");          \
+	    WARN_NULL(gles_##name);                                     \
+    }
+#endif // BOARDWALK_POTATO
 #define GL_TYPE_CASE(name, var, magic, type, code) \
     case magic: {                                  \
         type *name = (type *)var;                  \

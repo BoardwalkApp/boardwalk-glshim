@@ -1,8 +1,10 @@
+#define _GNU_SOURCE
 #include "texture.h"
 #include "raster.h"
 #include "decompress.h"
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
+#include <dlfcn.h>
 
 // expand non-power-of-two sizes
 // TODO: what does this do to repeating textures?
@@ -741,7 +743,11 @@ void glGetTexImage(GLenum target, GLint level, GLenum format, GLenum type, GLvoi
 		pixel_convert(bound->data, &img, bound->width, bound->height, GL_RGBA, GL_UNSIGNED_BYTE, format, type);
 	} else {
 		// Setup an FBO the same size of the texture
+#ifndef BOARDWALK_POTATO
 		#define getOES(name, proto)	proto name = (proto)eglGetProcAddress(#name); if (name==NULL) printf("Warning! %s is NULL\n", #name)
+#else
+		#define getOES(name, proto)	proto name = (proto)dlsym(RTLD_DEFAULT, #name); if (name==NULL) printf("Warning! %s is NULL\n", #name)
+#endif //BOARDWALK_POTATO
 		#define USEFBO
 		#ifdef USEFBO
 		// first, get all FBO functions...
