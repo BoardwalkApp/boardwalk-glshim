@@ -1,3 +1,12 @@
+This is a fork of lunixbochs' and ptitSeb's glshim library used in Boardwalk.
+
+See the [main Boardwalk repo](https://github.com/zhuowei/Boardwalk) for details and build instructions.
+
+The original README of glshim is included below:
+
+----
+
+
 glshim
 ====
 
