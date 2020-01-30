@@ -2,6 +2,9 @@ This is a fork of lunixbochs' and ptitSeb's glshim library used in Boardwalk.
 
 See the [main Boardwalk repo](https://github.com/zhuowei/Boardwalk) for details and build instructions.
 
+
+![Build Status](https://github.com/BoardwalkApp/boardwalk-glshim/workflows/Build%20glshim/badge.svg)
+
 ## Building
 
 For Boardwalk 1.0,

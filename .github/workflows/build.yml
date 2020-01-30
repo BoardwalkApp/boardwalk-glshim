@@ -1,0 +1,19 @@
+name: Build glshim
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Build with CI build script
+      run: 'cd build/android && $ANDROID_SDK_ROOT/ndk-bundle/ndk-build'
+
+    - name: Upload build output
+      uses: actions/upload-artifact@v1
+      with:
+        name: glshim
+        path: build/android/libs
